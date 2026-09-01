@@ -1,0 +1,10 @@
+{
+  "name": "Sárisápi Bányász Sport Egyesület",
+  "short_name": "SBSE",
+  "lang": "hu",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f3f0e8",
+  "theme_color": "#315c49",
+  "icons": [{ "src": "/brand/favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

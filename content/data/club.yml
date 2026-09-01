@@ -1,0 +1,25 @@
+name: Sárisápi Bányász Sport Egyesület
+shortName: Sárisápi BSE
+founded: 1940
+introduction: Helyi labdarúgó-közösség, ahol a felnőtt csapat, az utánpótlás és a szurkolók ugyanahhoz a történethez tartoznak.
+history: A klub 1940. augusztus 20-án, Sárisápi Atlétikai Club néven és egy labdarúgó-szakosztállyal alakult meg. A második világháború után a Dorogi Szénbányák támogatásával vette fel a Sárisápi Bányász Sportegyesület nevet, amelyet a mai napig büszkén visel.
+venue:
+  name: Sárisápi Sporttelep
+  address: 2523 Sárisáp, Dolina köz.
+  mapUrl: "https://www.openstreetmap.org/export/embed.html?bbox=18.681274652481083%2C47.67184025142421%2C18.68934273719788%2C47.676037540439076&layer=mapnik&marker=47.67393893813242%2C18.685308694839478"
+contacts:
+  - name: Jurásek Károly
+    role: Elnök
+    value: +36 70 386 0710
+    href: tel:+36703860710
+  - name: Friedrich Zoltán
+    role: Technikai vezető
+    value: +36 30 297 8896
+    href: tel:+36302978896
+  - name: Egyesületi e-mail
+    role: Általános ügyek
+    value: jurasek.sbse@gmail.com
+    href: mailto:jurasek.sbse@gmail.com
+socials:
+  - name: Facebook
+    href: "https://www.facebook.com/p/Sárisápi-BSE-100045712436636"

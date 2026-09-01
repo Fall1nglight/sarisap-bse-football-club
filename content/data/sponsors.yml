@@ -1,0 +1,9 @@
+sponsors:
+  - { name: Dunakő Építő, level: Kiemelt, logo: /brand/sponsors/dunako.svg, description: Dunakő Építő logója }
+  - { name: Gerecse Fa, level: Kiemelt, logo: /brand/sponsors/gerecse-fa.svg, description: Gerecse Fa logója }
+  - { name: Bányász Pékség, level: Kiemelt, logo: /brand/sponsors/banyasz-pekseg.svg, description: Bányász Pékség logója }
+  - { name: Völgy Autó, level: Közösségi, logo: /brand/sponsors/volgy-auto.svg, description: Völgy Autó logója }
+  - { name: Zöld Kapu Kertészet, level: Közösségi, logo: /brand/sponsors/zold-kapu.svg, description: Zöld Kapu Kertészet logója }
+  - { name: Forrásvíz, level: Közösségi, logo: /brand/sponsors/forrasviz.svg, description: Forrásvíz logója }
+  - { name: Malom Műhely, level: Közösségi, logo: /brand/sponsors/malom-muhely.svg, description: Malom Műhely logója }
+  - { name: Helyi Kör, level: Közösségi, logo: /brand/sponsors/helyi-kor.svg, description: Helyi Kör logója }

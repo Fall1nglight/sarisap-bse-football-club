@@ -1,0 +1,49 @@
+matches:
+  - id: sbse-2026-08-09
+    date: 2026-08-09T17:00:00+02:00
+    competition: Vármegyei I. osztály
+    homeTeam: Sárisápi BSE
+    awayTeam: Pilishegyi SE
+    venue: Sárisápi Sporttelep
+    status: upcoming
+  - id: sbse-2026-08-16
+    date: 2026-08-16T17:00:00+02:00
+    competition: Vármegyei I. osztály
+    homeTeam: Dunamenti TK
+    awayTeam: Sárisápi BSE
+    venue: Dunamenti Sportpark
+    status: upcoming
+  - id: sbse-2026-05-24
+    date: 2026-05-24T17:00:00+02:00
+    competition: Vármegyei I. osztály
+    homeTeam: Sárisápi BSE
+    awayTeam: Hegyvidék FC
+    venue: Sárisápi Sporttelep
+    status: finished
+    homeScore: 3
+    awayScore: 1
+  - id: sbse-2026-05-17
+    date: 2026-05-17T17:00:00+02:00
+    competition: Vármegyei I. osztály
+    homeTeam: Esztergomvárosi SC
+    awayTeam: Sárisápi BSE
+    venue: Városi Sporttelep
+    status: finished
+    homeScore: 2
+    awayScore: 2
+  - id: sbse-2026-05-10
+    date: 2026-05-10T17:00:00+02:00
+    competition: Vármegyei I. osztály
+    homeTeam: Sárisápi BSE
+    awayTeam: Lábatlani ESE
+    venue: Sárisápi Sporttelep
+    status: finished
+    homeScore: 1
+    awayScore: 0
+standings:
+  - { position: 1, team: Pilishegyi SE, played: 26, won: 18, drawn: 4, lost: 4, goalDifference: 35, points: 58 }
+  - { position: 2, team: Sárisápi BSE, played: 26, won: 17, drawn: 5, lost: 4, goalDifference: 29, points: 56 }
+  - { position: 3, team: Dunamenti TK, played: 26, won: 15, drawn: 5, lost: 6, goalDifference: 21, points: 50 }
+  - { position: 4, team: Hegyvidék FC, played: 26, won: 13, drawn: 6, lost: 7, goalDifference: 13, points: 45 }
+  - { position: 5, team: Esztergomvárosi SC, played: 26, won: 11, drawn: 6, lost: 9, goalDifference: 7, points: 39 }
+  - { position: 6, team: Lábatlani ESE, played: 26, won: 9, drawn: 5, lost: 12, goalDifference: -4, points: 32 }

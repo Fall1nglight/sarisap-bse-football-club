@@ -1,0 +1,56 @@
+adult:
+  title: Felnőtt csapat
+  introduction: Tapasztalat, helyi kötődés és bátor játék. Játékosaink minden mérkőzésen egymásért, a klubért és a sárisápi szurkolókért lépnek pályára.
+  image: /images/club/csapatkor.png
+  imageAlt: Zöld mezben összehajoló felnőtt labdarúgók a mérkőzés előtt
+  staff:
+    - { name: Nagy Márton, role: Vezetőedző }
+    - { name: Tóth Levente, role: Pályaedző }
+    - { name: Szabó Réka, role: Fizioterapeuta }
+  training:
+    - Kedd · 18:30–20:00
+    - Csütörtök · 18:30–20:00
+    - Péntek · 18:00–19:15
+  venue: Sárisápi Sporttelep
+  players:
+    - { name: Barta Dániel, number: 1, position: Kapus }
+    - { name: Molnár Kristóf, number: 12, position: Kapus }
+    - { name: Fekete Áron, number: 2, position: Védő }
+    - { name: Horváth Máté, number: 3, position: Védő }
+    - { name: Kiss Bence, number: 4, position: Védő }
+    - { name: Papp Gergő, number: 5, position: Védő }
+    - { name: Lakatos Márk, number: 15, position: Védő }
+    - { name: Varga Dominik, number: 6, position: Középpályás }
+    - { name: Németh Ákos, number: 7, position: Középpályás }
+    - { name: Juhász Zoltán, number: 8, position: Középpályás }
+    - { name: Balogh Milán, number: 10, position: Középpályás }
+    - { name: Rácz Tamás, number: 14, position: Középpályás }
+    - { name: Oláh Péter, number: 17, position: Középpályás }
+    - { name: Kelemen Dávid, number: 9, position: Támadó }
+    - { name: Simon Patrik, number: 11, position: Támadó }
+    - { name: Fodor Levente, number: 18, position: Támadó }
+youth:
+  - ageGroup: U7
+    coach: Sipos Anna
+    training: [Hétfő · 16:30–17:30, Szerda · 16:30–17:30]
+    description: Játékos mozgásfejlesztés és első labdaélmények, sok örömmel.
+  - ageGroup: U9
+    coach: Sipos Anna
+    training: [Kedd · 16:30–17:45, Csütörtök · 16:30–17:45]
+    description: Koordináció, labdabiztonság és az együttműködés alapjai.
+  - ageGroup: U11
+    coach: Mészáros Bálint
+    training: [Hétfő · 17:30–19:00, Szerda · 17:30–19:00]
+    description: Technikai fejlődés, kisjátékok és bátor döntéshozatal.
+  - ageGroup: U13
+    coach: Mészáros Bálint
+    training: [Kedd · 17:45–19:15, Péntek · 16:30–18:00]
+    description: Csapatszintű alapelvek és egyéni képességfejlesztés.
+  - ageGroup: U16
+    coach: Takács Roland
+    training: [Hétfő · 18:00–19:30, Szerda · 18:00–19:30, Péntek · 17:30–19:00]
+    description: Intenzív technikai-taktikai munka, fokozatos terheléssel.
+  - ageGroup: U19
+    coach: Takács Roland
+    training: [Kedd · 18:00–19:30, Csütörtök · 18:00–19:30, Péntek · 18:00–19:30]
+    description: Átmenet a felnőtt labdarúgásba, egyéni fejlesztési célokkal.

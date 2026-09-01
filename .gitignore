@@ -1,0 +1,33 @@
+# Dependencies and package-manager caches
+node_modules/
+.npm/
+.pnpm-store/
+
+# Nuxt, Nitro and Netlify build output
+.nuxt/
+.output/
+dist/
+.netlify/
+
+# Nuxt Content generated database
+.data/
+
+# Environment files and secrets (the documented template stays versioned)
+.env
+.env.*
+!.env.example
+
+# Test, coverage and local temporary output
+coverage/
+test-results/
+tmp/
+output/
+*.log
+
+# Editor and operating-system files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db

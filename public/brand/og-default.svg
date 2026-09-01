@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#f3f0e8"/>
+  <path d="M0 510h1200M865 0v630M720 315h480M1010 120a195 195 0 0 0 0 390" fill="none" stroke="#315c49" stroke-opacity=".2" stroke-width="3"/>
+  <path d="M145 112 277 162v104c0 83-51 138-132 182C64 404 13 349 13 266V162l132-50Z" transform="translate(65 20)" fill="#315c49"/>
+  <text x="210" y="300" text-anchor="middle" fill="#fffdf7" font-family="Arial,sans-serif" font-size="42" font-weight="700">SBSE</text>
+  <text x="420" y="280" fill="#20241f" font-family="Arial,sans-serif" font-size="76" font-weight="700">SÁRISÁPI BSE</text>
+  <text x="424" y="344" fill="#62695f" font-family="Arial,sans-serif" font-size="28">A pályán együtt. A pályán túl közösség.</text>
+  <text x="424" y="408" fill="#9b7938" font-family="Arial,sans-serif" font-size="20" font-weight="700" letter-spacing="4">SÁRISÁP · 1926</text>
+</svg>
