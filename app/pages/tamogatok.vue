@@ -1,17 +1,11 @@
 <script setup lang="ts">
 const { data } = await useAsyncData('sponsors-page', () => queryCollection('sponsors').first())
-const featured = computed(() => data.value?.sponsors.filter(sponsor => sponsor.level === 'Kiemelt') || [])
 const community = computed(() => data.value?.sponsors.filter(sponsor => sponsor.level === 'Közösségi') || [])
 useSiteSeo({ title: 'Támogatók', description: 'A Sárisápi BSE kiemelt és közösségi támogatói, valamint támogatói kapcsolat.' })
 </script>
 
 <template>
   <div>
-    <section class="section"><div class="container"><UiSectionHeading eyebrow="Kiemelt partnerek" title="A háttérben is csapat dolgozik" />
-      <div class="featured-sponsors"><article v-for="sponsor in featured" :key="sponsor.name"><span>Kiemelt partner</span><img :src="sponsor.logo" :alt="sponsor.description" width="320" height="120"></article></div>
-    </div></section>
-
-
     <section class="section section--surface"><div class="container"><UiSectionHeading eyebrow="Közösségi partnerek" title="Helyi erő, közös ügy" />
       <div class="community-sponsors"><article v-for="sponsor in community" :key="sponsor.name"><img :src="sponsor.logo" :alt="sponsor.description" width="320" height="120"><span>{{ sponsor.name }}</span></article></div>
     </div></section>
