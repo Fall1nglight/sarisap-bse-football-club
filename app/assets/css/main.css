@@ -26,6 +26,8 @@
     --color-accent: #9b7938;
     --color-on-brand: #fffdf7;
     --color-danger: #a9483d;
+    --color-loading-scrim: rgba(10, 15, 12, .72);
+    --color-loading-text: #fffdf7;
     --font-body: 'Manrope', 'Segoe UI', sans-serif;
     --font-display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
     --space-1: .25rem;
