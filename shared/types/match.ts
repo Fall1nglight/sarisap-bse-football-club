@@ -11,7 +11,13 @@ export interface Match {
   sourceUrl?: string
 }
 
-export interface TeamMatchesResponse {
+export interface TeamPlayer {
+  name: string
+  age: number | null
+  sourceUrl: string
+}
+
+export interface TeamDataResponse {
   team: {
     slug: TeamSlug
     name: string
@@ -20,6 +26,7 @@ export interface TeamMatchesResponse {
   }
   lastMatch: Match | null
   nextMatch: Match | null
+  players: TeamPlayer[]
   fetchedAt: string
   stale: boolean
 }

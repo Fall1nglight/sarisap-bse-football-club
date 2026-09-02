@@ -1,8 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
   clearMlszMatchCacheForTesting,
-  getMlszTeamMatches,
+  getMlszTeamData,
   parseMlszSchedule,
+  parseMlszTeamPlayers,
   selectRelevantMatches,
 } from '../server/utils/mlsz'
 
@@ -30,6 +31,28 @@ function scheduleRow({
       <span class="schedule-points">${score}</span>
     </div>
   `
+}
+
+function playerRow({
+  name,
+  age = '23',
+  href = '/player/123.html',
+}: {
+  name: string
+  age?: string
+  href?: string
+}) {
+  return `
+    <tr>
+      <td></td>
+      <td><a href="${href}"><span class="playerName"> ${name} </span></a></td>
+      <td>${age}</td>
+    </tr>
+  `
+}
+
+function playerTable(rows = '') {
+  return `<table><tbody id="teamPlayers">${rows}</tbody></table>`
 }
 
 describe('MLSZ schedule parser', () => {
@@ -77,6 +100,28 @@ describe('MLSZ schedule parser', () => {
   })
 })
 
+describe('MLSZ player parser', () => {
+  it('parses player links and ages in source order, while skipping invalid and duplicate rows', () => {
+    const players = parseMlszTeamPlayers(playerTable(`
+      ${playerRow({ name: '  KOVÁCS   DÁVID ', age: '33', href: '/player/250424.html' })}
+      ${playerRow({ name: 'TÓTH DÁNIEL', age: 'nincs adat', href: 'https://adatbank.mlsz.hu/player/268884.html' })}
+      ${playerRow({ name: 'KOVÁCS DÁVID', age: '33', href: '/player/250424.html' })}
+      ${playerRow({ name: 'HIBÁS JÁTÉKOS', href: '/club/67.html' })}
+    `), 'nb-iii')
+
+    expect(players).toEqual([
+      { name: 'KOVÁCS DÁVID', age: 33, sourceUrl: 'https://adatbank.mlsz.hu/player/250424.html' },
+      { name: 'TÓTH DÁNIEL', age: null, sourceUrl: 'https://adatbank.mlsz.hu/player/268884.html' },
+    ])
+  })
+
+  it('accepts an empty player table but rejects missing or unparseable tables', () => {
+    expect(parseMlszTeamPlayers(playerTable(), 'u19')).toEqual([])
+    expect(() => parseMlszTeamPlayers('<main></main>', 'u19')).toThrow('játékoskeret táblázata')
+    expect(() => parseMlszTeamPlayers(playerTable('<tr><td>hibás sor</td></tr>'), 'u19')).toThrow('nem feldolgozható')
+  })
+})
+
 describe('MLSZ match cache', () => {
   afterEach(() => {
     clearMlszMatchCacheForTesting()
@@ -92,11 +137,12 @@ describe('MLSZ match cache', () => {
         ${scheduleRow({ id: 'finished', date: '2026. 08. 30. 16:30', score: '1-0' })}
         ${scheduleRow({ id: 'future', date: '2026. 09. 05. 16:30' })}
       </div>
+      ${playerTable(playerRow({ name: 'KOVÁCS DÁVID', age: '33', href: '/player/250424.html' }))}
     `))
     vi.stubGlobal('fetch', fetchMock)
 
-    const first = await getMlszTeamMatches('nb-iii')
-    const cached = await getMlszTeamMatches('nb-iii')
+    const first = await getMlszTeamData('nb-iii')
+    const cached = await getMlszTeamData('nb-iii')
 
     expect(fetchMock).toHaveBeenCalledTimes(1)
     expect(cached).toEqual(first)
@@ -104,10 +150,11 @@ describe('MLSZ match cache', () => {
     now += 60 * 60 * 1000 + 1
     fetchMock.mockRejectedValue(new Error('MLSZ nem elérhető'))
 
-    await expect(getMlszTeamMatches('nb-iii')).resolves.toMatchObject({
+    await expect(getMlszTeamData('nb-iii')).resolves.toMatchObject({
       stale: true,
       lastMatch: { id: 'finished' },
       nextMatch: { id: 'future' },
+      players: [{ name: 'KOVÁCS DÁVID' }],
     })
     expect(fetchMock).toHaveBeenCalledTimes(3)
   })

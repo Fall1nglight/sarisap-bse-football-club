@@ -1,7 +1,7 @@
 import { load } from 'cheerio'
 import { DateTime } from 'luxon'
 import { getTeamBySlug } from '../../shared/teams.js'
-import type { Match, TeamMatchesResponse, TeamSlug } from '../../shared/types/match.js'
+import type { Match, TeamDataResponse, TeamPlayer, TeamSlug } from '../../shared/types/match.js'
 
 const BUDAPEST_TIMEZONE = 'Europe/Budapest'
 const CACHE_MAX_AGE_MS = 60 * 60 * 1000
@@ -14,14 +14,14 @@ export interface ParsedMatch extends Match {
   isInfo: boolean
 }
 
-interface CachedTeamMatches {
-  value: TeamMatchesResponse
+interface CachedTeamData {
+  value: TeamDataResponse
   expiresAt: number
   staleUntil: number
 }
 
-const cache = new Map<TeamSlug, CachedTeamMatches>()
-const refreshes = new Map<TeamSlug, Promise<TeamMatchesResponse>>()
+const cache = new Map<TeamSlug, CachedTeamData>()
+const refreshes = new Map<TeamSlug, Promise<TeamDataResponse>>()
 
 export function clearMlszMatchCacheForTesting() {
   cache.clear()
@@ -55,6 +55,23 @@ function absoluteUrl(value: string | undefined, sourceUrl: string): string | und
   }
   catch {
     return undefined
+  }
+}
+
+function parseAge(value: string): number | null {
+  const age = Number(cleanText(value))
+  return Number.isInteger(age) && age >= 0 ? age : null
+}
+
+function isMlszPlayerUrl(value: string): boolean {
+  try {
+    const url = new URL(value)
+    return url.protocol === 'https:'
+      && url.hostname === 'adatbank.mlsz.hu'
+      && /^\/player\/[^/]+\.html$/.test(url.pathname)
+  }
+  catch {
+    return false
   }
 }
 
@@ -100,6 +117,40 @@ export function parseMlszSchedule(html: string, slug: TeamSlug): ParsedMatch[] {
   return matches
 }
 
+export function parseMlszTeamPlayers(html: string, slug: TeamSlug): TeamPlayer[] {
+  const team = getTeamBySlug(slug)
+  if (!team) return []
+
+  const $ = load(html)
+  const table = $('#teamPlayers').first()
+  if (!table.length) throw new Error(`Az MLSZ játékoskeret táblázata nem található: ${team.name}`)
+
+  const rows = table.find('tr')
+  if (!rows.length) return []
+
+  const players: TeamPlayer[] = []
+  const seenPlayerUrls = new Set<string>()
+
+  rows.each((_, element) => {
+    const row = $(element)
+    const name = cleanText(row.find('.playerName').first().text())
+    const sourceUrl = absoluteUrl(row.find('a[href*="/player/"]').first().attr('href'), team.sourceUrl)
+
+    if (!name || !sourceUrl || !isMlszPlayerUrl(sourceUrl) || seenPlayerUrls.has(sourceUrl)) return
+
+    seenPlayerUrls.add(sourceUrl)
+    players.push({
+      name,
+      age: parseAge(row.children('td').last().text()),
+      sourceUrl,
+    })
+  })
+
+  if (!players.length) throw new Error(`Az MLSZ játékoskerete nem feldolgozható: ${team.name}`)
+
+  return players
+}
+
 export function selectRelevantMatches(schedule: ParsedMatch[], now = Date.now()) {
   const lastMatch = schedule
     .filter(match => match.status === 'finished')
@@ -111,7 +162,7 @@ export function selectRelevantMatches(schedule: ParsedMatch[], now = Date.now())
   return { lastMatch, nextMatch }
 }
 
-async function fetchSchedule(sourceUrl: string): Promise<string> {
+async function fetchTeamPage(sourceUrl: string): Promise<string> {
   let lastError: unknown
 
   for (let attempt = 0; attempt < 2; attempt += 1) {
@@ -122,7 +173,7 @@ async function fetchSchedule(sourceUrl: string): Promise<string> {
       const response = await fetch(sourceUrl, {
         headers: {
           accept: 'text/html,application/xhtml+xml',
-          'user-agent': 'Sarisapi-BSE-match-display/1.0',
+          'user-agent': 'Sarisapi-BSE-team-display/1.0',
         },
         signal: controller.signal,
       })
@@ -145,22 +196,26 @@ export async function getMlszTeamSchedule(slug: TeamSlug): Promise<ParsedMatch[]
   const team = getTeamBySlug(slug)
   if (!team) throw new Error(`Ismeretlen csapat: ${slug}`)
 
-  const schedule = parseMlszSchedule(await fetchSchedule(team.sourceUrl), slug)
+  const schedule = parseMlszSchedule(await fetchTeamPage(team.sourceUrl), slug)
   if (!schedule.length) throw new Error(`Az MLSZ nem adott feldolgozható menetrendet: ${team.name}`)
 
   return schedule
 }
 
-async function refreshTeamMatches(slug: TeamSlug): Promise<TeamMatchesResponse> {
+async function refreshTeamData(slug: TeamSlug): Promise<TeamDataResponse> {
   const team = getTeamBySlug(slug)
   if (!team) throw new Error(`Ismeretlen csapat: ${slug}`)
 
-  const schedule = await getMlszTeamSchedule(slug)
+  const html = await fetchTeamPage(team.sourceUrl)
+  const schedule = parseMlszSchedule(html, slug)
+  if (!schedule.length) throw new Error(`Az MLSZ nem adott feldolgozható menetrendet: ${team.name}`)
+
+  const players = parseMlszTeamPlayers(html, slug)
   const now = Date.now()
   const { lastMatch, nextMatch } = selectRelevantMatches(schedule, now)
 
   const stripInternalFields = ({ timestamp: _timestamp, isInfo: _isInfo, ...match }: ParsedMatch): Match => match
-  const value: TeamMatchesResponse = {
+  const value: TeamDataResponse = {
     team: {
       slug,
       name: team.name,
@@ -169,6 +224,7 @@ async function refreshTeamMatches(slug: TeamSlug): Promise<TeamMatchesResponse> 
     },
     lastMatch: lastMatch ? stripInternalFields(lastMatch) : null,
     nextMatch: nextMatch ? stripInternalFields(nextMatch) : null,
+    players,
     fetchedAt: new Date().toISOString(),
     stale: false,
   }
@@ -182,7 +238,7 @@ async function refreshTeamMatches(slug: TeamSlug): Promise<TeamMatchesResponse> 
   return value
 }
 
-export async function getMlszTeamMatches(slug: TeamSlug): Promise<TeamMatchesResponse> {
+export async function getMlszTeamData(slug: TeamSlug): Promise<TeamDataResponse> {
   const cached = cache.get(slug)
   const now = Date.now()
 
@@ -190,7 +246,7 @@ export async function getMlszTeamMatches(slug: TeamSlug): Promise<TeamMatchesRes
 
   let refresh = refreshes.get(slug)
   if (!refresh) {
-    refresh = refreshTeamMatches(slug)
+    refresh = refreshTeamData(slug)
     refreshes.set(slug, refresh)
   }
 

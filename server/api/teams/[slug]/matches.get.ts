@@ -1,5 +1,5 @@
 import { getTeamBySlug } from '~~/shared/teams'
-import { getMlszTeamMatches } from '~~/server/utils/mlsz'
+import { getMlszTeamData } from '~~/server/utils/mlsz'
 
 export default defineEventHandler(async (event) => {
   const slug = getRouterParam(event, 'slug')
@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    return await getMlszTeamMatches(team.slug)
+    return await getMlszTeamData(team.slug)
   }
   catch (error) {
     console.error(`MLSZ meccsadat betöltési hiba (${team.slug}):`, error)
