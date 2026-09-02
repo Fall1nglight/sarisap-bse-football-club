@@ -32,12 +32,19 @@ function toManagedEvent(event: CalendarEventInput): ManagedCalendarEvent {
 
 function createClient(initial: ManagedCalendarEvent[] = []) {
   const events = new Map(initial.map(event => [event.id, event]))
-  const calls = { created: 0, updated: 0, deleted: 0 }
+  const calls = { created: 0, updated: 0, deleted: 0, active: 0, maxActive: 0 }
+  const recordWrite = async (operation: () => void) => {
+    calls.active += 1
+    calls.maxActive = Math.max(calls.maxActive, calls.active)
+    await new Promise(resolve => setTimeout(resolve, 1))
+    operation()
+    calls.active -= 1
+  }
   const client: CalendarSyncClient = {
     async listManagedEvents() { return [...events.values()] },
-    async createEvent(event) { calls.created += 1; events.set(event.id, toManagedEvent(event)) },
-    async updateEvent(eventId, event) { calls.updated += 1; events.set(eventId, { ...toManagedEvent(event), id: eventId }) },
-    async deleteEvent(eventId) { calls.deleted += 1; events.delete(eventId) },
+    async createEvent(event) { await recordWrite(() => { calls.created += 1; events.set(event.id, toManagedEvent(event)) }); return 'created' as const },
+    async updateEvent(eventId, event) { await recordWrite(() => { calls.updated += 1; events.set(eventId, { ...toManagedEvent(event), id: eventId }) }) },
+    async deleteEvent(eventId) { await recordWrite(() => { calls.deleted += 1; events.delete(eventId) }) },
   }
   return { client, events, calls }
 }
@@ -76,6 +83,37 @@ describe('MLSZ calendar sync', () => {
     await syncMlszCalendar({ client, loadSchedule, now: Date.parse('2026-09-01T00:00:00+02:00') })
     expect(calls.updated).toBe(1)
     expect(events.get('manual-training')).toEqual(manualEvent)
+    expect(calls.maxActive).toBe(1)
+  })
+
+  it('counts a duplicate-id recovery as an update', async () => {
+    const { client, calls } = createClient()
+    client.createEvent = async () => 'updated'
+
+    const result = await syncMlszCalendar({ client, loadSchedule: async () => [match('conflict')] })
+
+    expect(result.teams.every(team => team.created === 0 && team.updated === 1)).toBe(true)
+    expect(calls.created).toBe(0)
+  })
+
+  it('loads MLSZ schedules in parallel while serializing calendar writes', async () => {
+    const { client, calls } = createClient()
+    let activeLoads = 0
+    let maxActiveLoads = 0
+
+    await syncMlszCalendar({
+      client,
+      loadSchedule: async slug => {
+        activeLoads += 1
+        maxActiveLoads = Math.max(maxActiveLoads, activeLoads)
+        await new Promise(resolve => setTimeout(resolve, 1))
+        activeLoads -= 1
+        return [match(`${slug}-match`)]
+      },
+    })
+
+    expect(maxActiveLoads).toBe(teamDefinitions.length)
+    expect(calls.maxActive).toBe(1)
   })
 
   it('deletes only a successfully loaded team\'s missing future managed event and reports a failed source', async () => {

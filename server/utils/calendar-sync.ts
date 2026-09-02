@@ -29,7 +29,7 @@ export interface ManagedCalendarEvent {
 
 export interface CalendarSyncClient {
   listManagedEvents(): Promise<ManagedCalendarEvent[]>
-  createEvent(event: CalendarEventInput): Promise<void>
+  createEvent(event: CalendarEventInput): Promise<'created' | 'updated'>
   updateEvent(eventId: string, event: CalendarEventInput): Promise<void>
   deleteEvent(eventId: string): Promise<void>
 }
@@ -134,10 +134,14 @@ export async function syncMlszCalendar({
       .filter((entry): entry is [string, ManagedCalendarEvent] => Boolean(entry[0])),
   )
 
-  return {
-    teams: await Promise.all(loadedTeams.map(async (loaded): Promise<TeamSyncResult> => {
+  const teams: TeamSyncResult[] = []
+
+  for (const loaded of loadedTeams) {
       const result = emptyTeamResult(loaded.team.slug)
-      if ('error' in loaded) return { ...result, error: loaded.error }
+      if ('error' in loaded) {
+        teams.push({ ...result, error: loaded.error })
+        continue
+      }
 
       const desiredEvents = loaded.schedule.map(match => toCalendarEvent(loaded.team, match))
       const desiredKeys = new Set(loaded.schedule.map(match => `${loaded.team.slug}:${match.id}`))
@@ -145,8 +149,8 @@ export async function syncMlszCalendar({
       for (const event of desiredEvents) {
         const existing = existingByKey.get(`${loaded.team.slug}:${event.extendedProperties.private.mlszMatchId}`)
         if (!existing) {
-          await client.createEvent(event)
-          result.created += 1
+          const action = await client.createEvent(event)
+          result[action] += 1
         }
         else if (isSameEvent(existing, event)) {
           result.unchanged += 1
@@ -166,7 +170,8 @@ export async function syncMlszCalendar({
         result.deleted += 1
       }
 
-      return result
-    })),
+      teams.push(result)
   }
+
+  return { teams }
 }
