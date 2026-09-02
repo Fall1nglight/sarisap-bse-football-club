@@ -1,7 +1,7 @@
 import { load } from 'cheerio'
 import { DateTime } from 'luxon'
-import { getTeamBySlug } from '~~/shared/teams'
-import type { Match, TeamMatchesResponse, TeamSlug } from '~~/shared/types/match'
+import { getTeamBySlug } from '../../shared/teams.js'
+import type { Match, TeamMatchesResponse, TeamSlug } from '../../shared/types/match.js'
 
 const BUDAPEST_TIMEZONE = 'Europe/Budapest'
 const CACHE_MAX_AGE_MS = 60 * 60 * 1000
@@ -141,12 +141,21 @@ async function fetchSchedule(sourceUrl: string): Promise<string> {
   throw lastError instanceof Error ? lastError : new Error('Az MLSZ oldal nem érhető el.')
 }
 
+export async function getMlszTeamSchedule(slug: TeamSlug): Promise<ParsedMatch[]> {
+  const team = getTeamBySlug(slug)
+  if (!team) throw new Error(`Ismeretlen csapat: ${slug}`)
+
+  const schedule = parseMlszSchedule(await fetchSchedule(team.sourceUrl), slug)
+  if (!schedule.length) throw new Error(`Az MLSZ nem adott feldolgozható menetrendet: ${team.name}`)
+
+  return schedule
+}
+
 async function refreshTeamMatches(slug: TeamSlug): Promise<TeamMatchesResponse> {
   const team = getTeamBySlug(slug)
   if (!team) throw new Error(`Ismeretlen csapat: ${slug}`)
 
-  const html = await fetchSchedule(team.sourceUrl)
-  const schedule = parseMlszSchedule(html, slug)
+  const schedule = await getMlszTeamSchedule(slug)
   const now = Date.now()
   const { lastMatch, nextMatch } = selectRelevantMatches(schedule, now)
 

@@ -1,4 +1,4 @@
-import type { TeamSlug } from './types/match'
+import type { TeamSlug } from './types/match.js'
 
 export interface TeamDefinition {
   slug: TeamSlug
@@ -10,6 +10,20 @@ export interface TeamDefinition {
 }
 
 export const teamDefinitions: readonly TeamDefinition[] = [
+  {
+    slug: 'nb-iii',
+    name: 'Sárisápi BSE',
+    competition: 'NB III. Észak-Nyugati csoport',
+    sourceUrl: 'https://adatbank.mlsz.hu/club/67/0/34055/7/328718.html',
+    profile: 'adult',
+  },
+  {
+    slug: 'felnott-ii',
+    name: 'Sárisápi BSE II.',
+    competition: 'T.I.O. FFI FELNŐTT ALAPSZAKASZ',
+    sourceUrl: 'https://adatbank.mlsz.hu/club/67/12/33789/3/331829.html',
+    profile: 'adult',
+  },
   {
     slug: 'u19',
     name: 'Sárisápi BSE U19',
@@ -33,20 +47,6 @@ export const teamDefinitions: readonly TeamDefinition[] = [
     sourceUrl: 'https://adatbank.mlsz.hu/club/67/12/34480/1/336503.html',
     profile: 'youth',
     ageGroup: 'U13',
-  },
-  {
-    slug: 'felnott-ii',
-    name: 'Sárisápi BSE II.',
-    competition: 'T.I.O. FFI FELNŐTT ALAPSZAKASZ',
-    sourceUrl: 'https://adatbank.mlsz.hu/club/67/12/33789/3/331829.html',
-    profile: 'adult',
-  },
-  {
-    slug: 'nb-iii',
-    name: 'Sárisápi BSE',
-    competition: 'NB III. Észak-Nyugati csoport',
-    sourceUrl: 'https://adatbank.mlsz.hu/club/67/0/34055/7/328718.html',
-    profile: 'adult',
   },
 ]
 
