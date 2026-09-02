@@ -1,6 +1,9 @@
-export interface NumberedPlayer {
+export interface NamedPlayer {
   name: string
-  number: number
+}
+
+export interface NumberedPlayer extends NamedPlayer {
+  number: number | null
 }
 
 interface JerseyNumberOverride {
@@ -43,14 +46,14 @@ function parseJerseyNumberOverrides(source: string | undefined, teamCount: numbe
   })
 }
 
-export function applyJerseyNumberOverrides<T extends NumberedPlayer>(
+export function applyJerseyNumberOverrides<T extends NamedPlayer>(
   players: readonly T[],
   teamIndex: number,
   source: string | undefined,
   teamCount: number,
-): T[] {
+): Array<T & NumberedPlayer> {
   const overrides = parseJerseyNumberOverrides(source, teamCount)
-  const resolvedPlayers = [...players]
+  const resolvedPlayers = players.map(player => ({ ...player, number: null }) as T & NumberedPlayer)
 
   for (const override of overrides) {
     if (override.teamIndex !== teamIndex) continue
@@ -65,7 +68,7 @@ export function applyJerseyNumberOverrides<T extends NumberedPlayer>(
     if (index === undefined) continue
     const player = resolvedPlayers[index]
     if (!player) continue
-    resolvedPlayers[index] = { ...player, number: override.number } as T
+    resolvedPlayers[index] = { ...player, number: override.number }
   }
 
   return resolvedPlayers

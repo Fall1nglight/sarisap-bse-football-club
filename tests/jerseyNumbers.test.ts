@@ -2,14 +2,19 @@ import { describe, expect, it } from 'vitest'
 import { applyJerseyNumberOverrides, normalizePlayerName } from '../shared/jerseyNumbers'
 
 const players = [
-  { name: 'Barta Dániel', number: 1, position: 'Kapus' },
-  { name: 'Fekete Áron', number: 2, position: 'Védő' },
+  { name: 'Barta Dániel' },
+  { name: 'Fekete Áron' },
 ]
 
 describe('jersey number overrides', () => {
-  it('keeps the source numbers when the optional file is missing or empty', () => {
-    expect(applyJerseyNumberOverrides(players, 0, undefined, 5)).toEqual(players)
-    expect(applyJerseyNumberOverrides(players, 0, '', 5)).toEqual(players)
+  it('uses null jersey numbers when the optional file is missing or empty', () => {
+    const expected = [
+      { name: 'Barta Dániel', number: null },
+      { name: 'Fekete Áron', number: null },
+    ]
+
+    expect(applyJerseyNumberOverrides(players, 0, undefined, 5)).toEqual(expected)
+    expect(applyJerseyNumberOverrides(players, 0, '', 5)).toEqual(expected)
   })
 
   it('matches names independently of case, accents, punctuation, and whitespace', () => {
@@ -28,7 +33,10 @@ describe('jersey number overrides', () => {
       '0: Barta Dániel: 12.5',
     ].join('\n')
 
-    expect(applyJerseyNumberOverrides(players, 0, source, 5)).toEqual(players)
+    expect(applyJerseyNumberOverrides(players, 0, source, 5)).toEqual([
+      { name: 'Barta Dániel', number: null },
+      { name: 'Fekete Áron', number: null },
+    ])
   })
 
   it('uses the last valid matching line', () => {
@@ -39,10 +47,13 @@ describe('jersey number overrides', () => {
 
   it('does not override an ambiguous normalized name', () => {
     const duplicatePlayers = [
-      { name: 'Kiss Áron', number: 3 },
-      { name: 'Kiss Aron', number: 4 },
+      { name: 'Kiss Áron' },
+      { name: 'Kiss Aron' },
     ]
 
-    expect(applyJerseyNumberOverrides(duplicatePlayers, 0, '0: Kiss Áron: 9', 5)).toEqual(duplicatePlayers)
+    expect(applyJerseyNumberOverrides(duplicatePlayers, 0, '0: Kiss Áron: 9', 5)).toEqual([
+      { name: 'Kiss Áron', number: null },
+      { name: 'Kiss Aron', number: null },
+    ])
   })
 })
