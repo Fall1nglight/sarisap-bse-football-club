@@ -40,12 +40,24 @@ környezetéhez igazodik.
 ```dotenv
 NUXT_PUBLIC_SITE_URL=https://example.com
 NUXT_PUBLIC_SITE_INDEXABLE=false
+NUXT_PUBLIC_GOOGLE_CALENDAR_ID=example@group.calendar.google.com
 ```
 
 - `NUXT_PUBLIC_SITE_URL`: canonical, Open Graph, sitemap és strukturált adatok alap URL-je.
 - `NUXT_PUBLIC_SITE_INDEXABLE=false`: minden oldalon `noindex, nofollow`, a `robots.txt`
   pedig `Disallow: /` szabályt kap. Ez a biztonságos alapérték.
 - `NUXT_PUBLIC_SITE_INDEXABLE=true`: csak a teljes élesítési ellenőrzőlista után állítható be.
+- `NUXT_PUBLIC_GOOGLE_CALENDAR_ID`: a publikus, beágyazott klubnaptár azonosítója.
+
+### Google Calendar és MLSZ-szinkron
+
+1. Hozz létre egy klubtulajdonú másodlagos Google Naptárt `Sárisápi BSE – Programok` néven, `Europe/Budapest` időzónával, majd tedd nyilvánossá az eseményrészleteket.
+2. A szerkesztőket a Google Calendarban add hozzá `Make changes to events` jogosultsággal. A weboldal nem biztosít szerkesztői felületet.
+3. A Google Cloud projektben engedélyezd a Google Calendar API-t, hozz létre service accountot, majd annak e-mail-címét is add hozzá szerkesztőként ehhez a naptárhoz.
+4. A service account JSON-kulcsát base64-kódold, és csak Netlify secretként állítsd be `GOOGLE_SERVICE_ACCOUNT_CREDENTIALS_BASE64` néven. A publikus naptárazonosító legyen `NUXT_PUBLIC_GOOGLE_CALENDAR_ID`.
+5. A publikált deploy után a Netlify Functions felületén futtasd egyszer kézzel a `sync-calendar` funkciót. Ezután óránként összehangolja mind az öt csapat érvényes MLSZ-meccseit; a kézzel rögzített edzéseket és klubprogramokat nem módosítja.
+
+A szinkron az MLSZ által kezelt meccseseményeket a következő futáskor felülírja. Sikeresen beolvasott csapatnál az MLSZ-ről eltűnt jövőbeli esemény törlődik, de sikertelen vagy üres forrás esetén nincs törlés.
 
 Megjegyzés: a sitemap demó buildben is elkészül a technikai QA miatt, de a robots fájl
 nem hirdeti, és a meta/robots szabályok tiltják az indexelést.
@@ -70,12 +82,26 @@ Kategóriák: `Felnőtt`, `Utánpótlás`, `Egyesület`, `Közösség`.
 |---|---|
 | `content/data/club.yml` | klubnév, bemutatkozás, helyszín, elérhetőségek, közösségi linkek |
 | `content/data/teams.yml` | felnőtt keret, stáb, edzések, hat utánpótlás-korosztály |
-| `content/data/matches.yml` | mérkőzések és minta tabella |
 | `content/data/sponsors.yml` | támogatói szintek és logók |
 | `content/data/tao.yml` | évadonkénti dokumentumok |
 
 A mezőket a `content.config.ts` Zod-sémái validálják. Hiányzó kötelező mező, hibás
 dátum vagy nem létező helyi asset esetén a build meghiúsul.
+
+### Mezszámok felülírása
+
+Ha egy játékos mezszámát csapatonként felül kell írni, másold a
+`content/data/mezszamok.example.md` fájlt `content/data/mezszamok.md` néven, majd
+soronként add meg: `csapatindex: játékos neve: mezszám`.
+
+```text
+0: Barta Dániel: 1
+1: Barta Dániel: 12
+```
+
+Csapatindexek: `0` NB III., `1` T.I.O. felnőtt, `2` U19, `3` U16, `4` U13. A fájl
+opcionális: hiánya, üres sora, `#` kezdetű megjegyzése vagy hibás bejegyzése nem okoz
+hibát; ilyenkor a `teams.yml` eredeti mezszáma marad érvényben.
 
 ## Demóképek és cserehelyük
 

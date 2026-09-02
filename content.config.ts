@@ -65,27 +65,6 @@ export default defineContentConfig({
         })),
       }),
     }),
-    matches: defineCollection({
-      type: 'data',
-      source: 'data/matches.yml',
-      schema: z.object({
-        matches: z.array(z.object({
-          id: z.string(),
-          date: z.string().datetime({ offset: true }),
-          competition: z.string(),
-          homeTeam: z.string(),
-          awayTeam: z.string(),
-          venue: z.string(),
-          status: z.enum(['upcoming', 'finished']),
-          homeScore: z.number().optional(),
-          awayScore: z.number().optional(),
-        })),
-        standings: z.array(z.object({
-          position: z.number(), team: z.string(), played: z.number(), won: z.number(),
-          drawn: z.number(), lost: z.number(), goalDifference: z.number(), points: z.number(),
-        })),
-      }),
-    }),
     sponsors: defineCollection({
       type: 'data',
       source: 'data/sponsors.yml',

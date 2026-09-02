@@ -25,6 +25,7 @@ export default defineNuxtConfig({
     public: {
       siteUrl,
       siteIndexable: isIndexable,
+      googleCalendarId: process.env.NUXT_PUBLIC_GOOGLE_CALENDAR_ID || '',
     },
   },
   app: {

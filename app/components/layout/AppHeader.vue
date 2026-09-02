@@ -10,7 +10,6 @@ const panel = ref<HTMLElement | null>(null)
 const nav = [
   { label: 'Főoldal', to: '/' },
   { label: 'Hírek', to: '/hirek' },
-  { label: 'Mérkőzések', to: '/merkozesek' },
   { label: 'Támogatók', to: '/tamogatok' },
   { label: 'TAO', to: '/tao' },
   { label: 'Kapcsolat', to: '/kapcsolat' },
@@ -75,6 +74,7 @@ function isCurrent(to: string) {
             </NuxtLink>
           </div>
         </div>
+        <NuxtLink to="/naptar" :aria-current="isCurrent('/naptar') ? 'page' : undefined">Naptár</NuxtLink>
         <NuxtLink v-for="item in nav.slice(2)" :key="item.to" :to="item.to" :aria-current="isCurrent(item.to) ? 'page' : undefined">
           {{ item.label }}
         </NuxtLink>
@@ -138,6 +138,9 @@ function isCurrent(to: string) {
                 {{ item.label }}
               </NuxtLink>
             </div>
+            <NuxtLink class="mobile-menu__link" to="/naptar" :aria-current="isCurrent('/naptar') ? 'page' : undefined">
+              Naptár
+            </NuxtLink>
             <NuxtLink
               v-for="item in nav.slice(2)"
               :key="item.to"

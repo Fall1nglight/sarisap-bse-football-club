@@ -1,16 +1,13 @@
 <script setup lang="ts">
 const { data } = await useAsyncData('home-data', async () => {
-  const [news, matchData, club, sponsors] = await Promise.all([
+  const [news, club, sponsors] = await Promise.all([
     queryCollection('news').order('publishedAt', 'DESC').limit(3).all(),
-    queryCollection('matches').first(),
     queryCollection('club').first(),
     queryCollection('sponsors').first(),
   ])
-  return { news, matchData, club, sponsors }
+  return { news, club, sponsors }
 })
 
-const upcoming = computed(() => data.value?.matchData?.matches.find(match => match.status === 'upcoming'))
-const latest = computed(() => [...(data.value?.matchData?.matches || [])].filter(match => match.status === 'finished')[0])
 const sponsorList = computed(() => data.value?.sponsors?.sponsors.slice(0, 6) || [])
 
 const heroSlides = [
@@ -103,23 +100,11 @@ useJsonLd({
           <h1 class="home-hero__step home-hero__step--2">Egy pálya.<br><span>Sok történet.</span></h1>
           <p class="home-hero__lead home-hero__step home-hero__step--3">A pályán együtt. A pályán túl közösség.</p>
           <div class="button-row home-hero__step home-hero__step--4">
-            <UiButton to="/merkozesek">Következő mérkőzés</UiButton>
             <UiButton to="/csapatok/utanpotlas" variant="secondary">Csatlakozz hozzánk</UiButton>
           </div>
         </div>
         <div class="home-hero__crest" aria-hidden="true"><BrandMark /></div>
         <div class="home-hero__scroll" aria-hidden="true"><span /> Görgess tovább</div>
-      </div>
-    </section>
-
-    <section v-if="upcoming && latest" class="section section--surface match-highlight">
-      <div class="container">
-        <UiSectionHeading eyebrow="A pálya következik" title="Következő és legutóbbi" intro="Kövesd a soron következő találkozót, és idézd fel velünk a csapat legutóbbi eredményét." align="split" />
-        <div class="match-highlight__grid">
-          <MatchesMatchCard :match="upcoming" featured data-reveal />
-          <MatchesMatchCard :match="latest" data-reveal />
-        </div>
-        <div class="section-link"><UiButton to="/merkozesek" variant="text">Minden mérkőzés és tabella</UiButton></div>
       </div>
     </section>
 
@@ -209,7 +194,6 @@ useJsonLd({
 .home-hero__step { animation: hero-in .62s var(--ease-out) both; }
 .home-hero__step--1 { animation-delay: .05s; }.home-hero__step--2 { animation-delay: .12s; }.home-hero__step--3 { animation-delay: .19s; }.home-hero__step--4 { animation-delay: .26s; }
 @keyframes hero-in { from { transform: translateY(1rem); opacity: 0; } }
-.match-highlight__grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1rem, 3vw, 2rem); }
 .news-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(1.5rem, 3vw, 2.5rem); }
 .section-link { margin-top: 2rem; border-top: 1px solid var(--color-line); }
 .teams-teaser { display: grid; grid-template-columns: 1fr 1fr; }
@@ -228,7 +212,7 @@ useJsonLd({
 .sponsors-strip__grid img { width: min(100%, 16rem); }
 .recruit-cta { padding-block: var(--section-space); }.recruit-cta h2 { max-width: 12ch; }.recruit-cta__grid > div:last-child p { margin-bottom: 2rem; color: color-mix(in srgb, var(--color-on-brand) 75%, transparent); }
 .venue-teaser { position: relative; min-height: 42rem; display: grid; align-items: end; overflow: hidden; }.venue-teaser > :deep(img) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }.venue-teaser::after { position: absolute; inset: 0; background: linear-gradient(90deg,rgba(12,19,15,.65),transparent 70%); content:''; }.venue-teaser__card { position: relative; z-index: 1; width: min(100% - 2 * var(--page-gutter), var(--container)); margin-bottom: clamp(2rem,5vw,5rem); padding: clamp(2rem,5vw,4rem); background: var(--color-canvas); }.venue-teaser__card h2 { margin-bottom: 1rem; }.venue-teaser__card p:not(.eyebrow) { margin-bottom: 2rem; color: var(--color-muted); }
-@media (max-width: 767px) { .home-hero__inner { grid-template-columns: 1fr; }.home-hero__crest { display:none; }.home-hero__shade { background: linear-gradient(90deg,rgba(12,19,15,.82),rgba(12,19,15,.3)); }.match-highlight__grid,.news-grid,.teams-teaser,.history-section__grid,.recruit-cta__grid { grid-template-columns: 1fr; }.news-grid__item:nth-child(n+3) { display: none; }.teams-teaser__item { min-height: 32rem; }.sponsors-strip__grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 767px) { .home-hero__inner { grid-template-columns: 1fr; }.home-hero__crest { display:none; }.home-hero__shade { background: linear-gradient(90deg,rgba(12,19,15,.82),rgba(12,19,15,.3)); }.news-grid,.teams-teaser,.history-section__grid,.recruit-cta__grid { grid-template-columns: 1fr; }.news-grid__item:nth-child(n+3) { display: none; }.teams-teaser__item { min-height: 32rem; }.sponsors-strip__grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 479px) { .sponsors-strip__grid { grid-template-columns: 1fr; }.venue-teaser__card { width: calc(100% - 2rem); } }
 @media (prefers-reduced-motion: reduce) { .home-hero__media :deep(.home-hero__slide) { transition: none; }.home-hero__step { animation: none; }.teams-teaser__item:hover :deep(img),.teams-teaser__item:hover svg { transform:none; } }
 </style>

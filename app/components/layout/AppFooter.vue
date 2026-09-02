@@ -14,7 +14,7 @@ const { data: club } = await useAsyncData('footer-club', () => queryCollection('
         <p class="footer-title">Felfedezés</p>
         <NuxtLink to="/hirek">Hírek</NuxtLink>
         <NuxtLink to="/csapatok">Csapatok</NuxtLink>
-        <NuxtLink to="/merkozesek">Mérkőzések</NuxtLink>
+        <NuxtLink to="/naptar">Naptár</NuxtLink>
       </nav>
       <nav aria-label="Klubinformációk">
         <p class="footer-title">Klub</p>

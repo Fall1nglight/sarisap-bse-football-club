@@ -15,7 +15,6 @@ const pages = [
   ['csapatok', 'Egy címer.'],
   ['csapatok/felnott', 'Felnőtt csapat'],
   ['csapatok/utanpotlas', 'Az első labdaérintéstől'],
-  ['merkozesek', 'Kilencven perc'],
   ['tamogatok', 'Akik velünk építik'],
   ['tao', 'Átlátható dokumentumtár'],
   ['kapcsolat', 'A pálya mellett'],
