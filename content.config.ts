@@ -5,12 +5,6 @@ const person = z.object({
   role: z.string(),
 })
 
-const player = z.object({
-  name: z.string(),
-  number: z.number(),
-  position: z.string(),
-})
-
 export default defineContentConfig({
   collections: {
     news: defineCollection({
@@ -47,21 +41,10 @@ export default defineContentConfig({
       type: 'data',
       source: 'data/teams.yml',
       schema: z.object({
-        adult: z.object({
-          title: z.string(),
-          introduction: z.string(),
-          image: z.string(),
-          imageAlt: z.string(),
+        teams: z.array(z.object({
+          id: z.number().int().min(0).max(4),
           staff: z.array(person),
           training: z.array(z.string()),
-          venue: z.string(),
-          players: z.array(player),
-        }),
-        youth: z.array(z.object({
-          ageGroup: z.enum(['U7', 'U9', 'U11', 'U13', 'U16', 'U19']),
-          coach: z.string(),
-          training: z.array(z.string()),
-          description: z.string(),
         })),
       }),
     }),

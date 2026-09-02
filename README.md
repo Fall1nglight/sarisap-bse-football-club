@@ -81,7 +81,7 @@ Kategóriák: `Felnőtt`, `Utánpótlás`, `Egyesület`, `Közösség`.
 | Fájl | Tartalom |
 |---|---|
 | `content/data/club.yml` | klubnév, bemutatkozás, helyszín, elérhetőségek, közösségi linkek |
-| `content/data/teams.yml` | felnőtt keret, stáb, edzések, hat utánpótlás-korosztály |
+| `content/data/teams.yml` | csapatonkénti stáb és edzésidőpontok, a mezszám-hozzárendeléssel azonos 0–4-es azonosítóval |
 | `content/data/sponsors.yml` | támogatói szintek és logók |
 | `content/data/tao.yml` | évadonkénti dokumentumok |
 
@@ -101,7 +101,7 @@ soronként add meg: `csapatindex: játékos neve: mezszám`.
 
 Csapatindexek: `0` NB III., `1` T.I.O. felnőtt, `2` U19, `3` U16, `4` U13. A fájl
 opcionális: hiánya, üres sora, `#` kezdetű megjegyzése vagy hibás bejegyzése nem okoz
-hibát; ilyenkor a `teams.yml` eredeti mezszáma marad érvényben.
+hibát; az érintett MLSZ-játékos mezszáma ilyenkor `?` lesz.
 
 ## Demóképek és cserehelyük
 

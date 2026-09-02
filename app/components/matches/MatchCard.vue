@@ -15,7 +15,6 @@ const result = computed(() => props.match.status === 'finished'
   <article class="match-card" :class="{ 'match-card--featured': featured }">
     <div class="match-card__top">
       <span>{{ match.competition }}</span>
-      <span>{{ match.status === 'upcoming' ? 'Következő' : 'Végeredmény' }}</span>
     </div>
     <time :datetime="match.date" class="match-card__date">{{ formatDate(match.date) }}</time>
     <div class="match-card__teams">
@@ -31,7 +30,7 @@ const result = computed(() => props.match.status === 'finished'
 .match-card { position: relative; padding: clamp(1.5rem, 4vw, 2.5rem); border: 1px solid var(--color-line); border-radius: var(--radius-md); background: var(--color-surface); }
 .match-card::before { position: absolute; top: -.5rem; left: 1.5rem; width: 3rem; height: 1rem; border: solid var(--color-accent); border-width: 1px 1px 0; content: ''; }
 .match-card__top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem; color: var(--color-muted); font-size: .68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
-.match-card__top span:last-child { color: var(--color-accent); }
+.match-card__top span + span { color: var(--color-accent); }
 .match-card__date { display: block; margin: 1.25rem 0 1rem; color: var(--color-muted); font-size: .8rem; font-weight: 600; }
 .match-card__teams { display: grid; align-items: center; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 1rem; font-family: var(--font-display); font-size: clamp(1.25rem, 2.3vw, 1.75rem); font-weight: 700; line-height: 1.05; }
 .match-card__teams span { min-width: 0; }
