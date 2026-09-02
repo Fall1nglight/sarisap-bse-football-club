@@ -10,12 +10,6 @@ useSiteSeo({
 
 <template>
   <div>
-    <UiPageHero
-      eyebrow="Programok"
-      title="Naptár"
-      intro="Itt találod a Sárisápi BSE edzéseit, mérkőzéseit és további klubprogramjait. A mérkőzések az MLSZ Adatbankból frissülnek."
-    />
-
     <section class="section calendar-section" aria-labelledby="calendar-heading">
       <div class="container">
         <UiSectionHeading
