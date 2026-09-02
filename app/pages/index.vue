@@ -100,7 +100,7 @@ useJsonLd({
           <h1 class="home-hero__step home-hero__step--2">Egy pálya.<br><span>Sok történet.</span></h1>
           <p class="home-hero__lead home-hero__step home-hero__step--3">A pályán együtt. A pályán túl közösség.</p>
           <div class="button-row home-hero__step home-hero__step--4">
-            <UiButton to="/csapatok/utanpotlas" variant="secondary">Csatlakozz hozzánk</UiButton>
+            <UiButton to="/csapatok" variant="secondary">Csatlakozz hozzánk</UiButton>
           </div>
         </div>
         <div class="home-hero__crest" aria-hidden="true"><BrandMark /></div>
@@ -119,12 +119,12 @@ useJsonLd({
     </section>
 
     <section class="teams-teaser">
-      <NuxtLink class="teams-teaser__item" to="/csapatok/felnott">
+      <NuxtLink class="teams-teaser__item" to="/csapatok">
         <NuxtImg src="/images/club/csapatkor.png" alt="Felnőtt labdarúgók csapatkörben" width="1536" height="1024" sizes="xs:100vw md:50vw" format="webp" loading="lazy" />
         <span class="teams-teaser__shade" />
         <span class="teams-teaser__content"><small>Felnőtt</small><strong>Tapasztalat<br>és bátorság.</strong><Icon name="lucide:arrow-up-right" /></span>
       </NuxtLink>
-      <NuxtLink class="teams-teaser__item" to="/csapatok/utanpotlas">
+      <NuxtLink class="teams-teaser__item" to="/csapatok">
         <NuxtImg src="/images/club/utanpotlas-edzes.png" alt="Utánpótláskorú gyerekek labdás edzésen" width="1536" height="1024" sizes="xs:100vw md:50vw" format="webp" loading="lazy" />
         <span class="teams-teaser__shade" />
         <span class="teams-teaser__content"><small>Utánpótlás</small><strong>Itt kezdődik<br>a játék.</strong><Icon name="lucide:arrow-up-right" /></span>
