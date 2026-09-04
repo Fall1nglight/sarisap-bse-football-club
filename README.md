@@ -26,5 +26,4 @@ A mérkőzések és a játékoskeretek adatai az MLSZ Adatbankból érkeznek.
 ![Főoldal - csapatok](repo_images/homepage_teams_and_history.png)
 ![Főoldal - szponzorok](repo_images/homepage_sponsors_and_location.png)
 ![Klubnaptár](repo_images/calendar.png)
-![TAO-dokumentumok oldala](repo_images/tao_documents.png)
 ![Kapcsolat oldal](repo_images/contact.png)
