@@ -19,8 +19,6 @@ A mérkőzések és a játékoskeretek adatai az MLSZ Adatbankból érkeznek.
 
 ## Képernyőképek
 
-### Főoldal
-
 ![A Sárisápi BSE oldalának főoldala](repo_images/homepage.png)
 ![Főoldal - hírek](repo_images/homepage_news.png)
 ![Főoldal - csapatok](repo_images/homepage_teams_and_history.png)
